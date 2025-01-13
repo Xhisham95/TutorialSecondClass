@@ -2,47 +2,47 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'users'; // Database table
+    protected $primaryKey = 'User_ID'; // Primary key
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'UserName',
+        'Password',
+        'Email',
+        'Role',
+        'Program'
+    ]; // Fillable attributes
+
+    protected $hidden = ['Password', 'remember_token']; // Hidden attributes
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relationship with Quotas (One-to-One)
+    public function quota()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasOne(Quota::class, 'Supervisor_ID', 'User_ID');
+    }
+
+    // Relationship with Appointments (One-to-Many)
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'Student_ID', 'User_ID');
+    }
+
+    // Relationship with Project Topics (Student)
+    public function projectTopics()
+    {
+        return $this->hasMany(ProjectTopic::class, 'Student_ID', 'User_ID');
+    }
+
+    // Relationship with Project Topics (Supervisor)
+    public function supervisedTopics()
+    {
+        return $this->hasMany(ProjectTopic::class, 'Supervisor_ID', 'User_ID');
     }
 }
