@@ -37,3 +37,27 @@ Route::prefix('users')->name('users.')->group(function () {
     Route::get('/report', [UserController::class, 'generateReport'])->name('report'); // Generate user report
     Route::post('/assign', [UserController::class, 'assignLecturers'])->name('assign'); // Assign lecturers to students
 });
+
+// Routes Restricted by Role
+Route::middleware(['auth', 'role:FYP_Coordinator'])->group(function () {
+    // Routes only accessible by FYP Coordinators
+    Route::prefix('fyp-coordinator')->name('fyp_coordinator.')->group(function () {
+        Route::get('/manage-users', [UserController::class, 'index'])->name('manage_users');
+        Route::get('/assign-lecturers', [UserController::class, 'assignLecturers'])->name('assign_lecturers');
+        Route::get('/generate-reports', [UserController::class, 'generateReport'])->name('generate_reports');
+    });
+});
+
+Route::middleware(['auth', 'role:Lecturer'])->group(function () {
+    // Routes only accessible by Lecturers
+    Route::get('/lecturer/dashboard', function () {
+        return view('lecturer.dashboard');
+    })->name('lecturer.dashboard');
+});
+
+Route::middleware(['auth', 'role:Student'])->group(function () {
+    // Routes only accessible by Students
+    Route::get('/student/dashboard', function () {
+        return view('student.dashboard');
+    })->name('student.dashboard');
+});
