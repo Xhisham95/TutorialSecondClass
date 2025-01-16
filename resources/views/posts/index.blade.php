@@ -1,3 +1,0 @@
-edit, show
-,
-create

@@ -2,47 +2,50 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    protected $table = 'users'; // Database table
-    protected $primaryKey = 'User_ID'; // Primary key
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
     protected $fillable = [
         'UserName',
-        'Password',
-        'Email',
+        'email',
+        'password',
         'Role',
-        'Program'
-    ]; // Fillable attributes
+        'Program',
+    ];
+    
 
-    protected $hidden = ['Password', 'remember_token']; // Hidden attributes
-
-    protected $casts = [
-        'email_verified_at' => 'datetime',
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
-    // Relationship with Quotas (One-to-One)
-    public function quota()
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        return $this->hasOne(Quota::class, 'Supervisor_ID', 'User_ID');
-    }
-
-    // Relationship with Appointments (One-to-Many)
-    public function appointments()
-    {
-        return $this->hasMany(Appointment::class, 'Student_ID', 'User_ID');
-    }
-
-    // Relationship with Project Topics (Student)
-    public function projectTopics()
-    {
-        return $this->hasMany(ProjectTopic::class, 'Student_ID', 'User_ID');
-    }
-
-    // Relationship with Project Topics (Supervisor)
-    public function supervisedTopics()
-    {
-        return $this->hasMany(ProjectTopic::class, 'Supervisor_ID', 'User_ID');
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 }
