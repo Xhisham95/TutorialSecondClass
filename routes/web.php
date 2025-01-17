@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QuotaController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TimeFrameController;
+use App\Http\Controllers\ReportController;
+
+
 
 
 
@@ -61,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/upload-users', function () {
     return view('admin.upload_users');
 })->name('users.upload');
-Route::get('/admin/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/admin/users', action: [UserController::class, 'index'])->name('users.index');
 Route::post('/admin/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/admin/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::post('/admin/users/{id}/update', [UserController::class, 'update'])->name('users.update');
