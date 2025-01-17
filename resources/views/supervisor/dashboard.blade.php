@@ -1,3 +1,9 @@
+@extends('layouts.app')
+
+@section('title', 'Admin Dashboard')
+
+@section('content')
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
