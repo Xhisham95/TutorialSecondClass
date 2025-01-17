@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
 {
     Schema::create('quotas', function (Blueprint $table) {
-        $table->id('Quota_ID');
+        $table->id('id');
         $table->unsignedBigInteger('Supervisor_ID'); // Match the type of 'id' in 'users' table
         $table->integer('QuotaNumber');
         $table->timestamps();

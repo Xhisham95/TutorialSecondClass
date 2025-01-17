@@ -11,26 +11,29 @@ class QuotaController extends Controller
     {
         $quotas = Quota::with('supervisor')->get(); // Load all quotas with related supervisor details
         return view('quota.index', compact('quotas'));
+
     }
 
     public function create()
     {
-        return view('quota.create');
+            // Assuming 'Role' is the field used to define user roles
+    $supervisors = \App\Models\User::where('Role', 'supervisor')->get();
+
+    return view('quota.create', compact('supervisors'));
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'Supervisor_ID' => 'required|exists:users,id',
-            'QuotaNumber' => 'required|integer|min:1|max:15',
-            'Start_Date' => 'required|date',
-            'End_Date' => 'required|date|after_or_equal:Start_Date',
-        ]);
+{
+    $request->validate([
+        'Supervisor_ID' => 'required|exists:users,id',
+        'QuotaNumber' => 'required|integer|min:1|max:15',
+    ]);
 
-        Quota::create($request->all());
+    Quota::create($request->all());
 
-        return redirect()->route('quota.index')->with('success', 'Quota created successfully.');
-    }
+    return redirect()->route('quota.index')->with('success', 'Quota created successfully.');
+}
+
 
     public function edit($id)
     {

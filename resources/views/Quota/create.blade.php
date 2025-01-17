@@ -18,14 +18,6 @@
                 <label for="QuotaNumber">Quota</label>
                 <input type="number" name="QuotaNumber" id="QuotaNumber" class="form-control" required>
             </div>
-            <div class="form-group">
-                <label for="Start_Date">Start Date</label>
-                <input type="date" name="Start_Date" id="Start_Date" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="End_Date">End Date</label>
-                <input type="date" name="End_Date" id="End_Date" class="form-control" required>
-            </div>
             <button type="submit" class="btn btn-success mt-3">Save</button>
         </form>
     </div>

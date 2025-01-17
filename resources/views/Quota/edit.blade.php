@@ -10,15 +10,6 @@
             <div class="form-group">
                 <label for="QuotaNumber">Quota</label>
                 <input type="number" name="QuotaNumber" id="QuotaNumber" value="{{ $quota->QuotaNumber }}" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="Start_Date">Start Date</label>
-                <input type="date" name="Start_Date" id="Start_Date" value="{{ $quota->Start_Date }}" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="End_Date">End Date</label>
-                <input type="date" name="End_Date" id="End_Date" value="{{ $quota->End_Date }}" class="form-control" required>
-            </div>
             <button type="submit" class="btn btn-success mt-3">Update</button>
         </form>
     </div>

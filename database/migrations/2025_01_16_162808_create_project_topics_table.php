@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
 {
     Schema::create('project_topics', function (Blueprint $table) {
-        $table->id('Topic_ID'); // This creates an unsignedBigInteger primary key
+        $table->id(); // This creates an unsignedBigInteger primary key
         $table->unsignedBigInteger('Student_ID');
         $table->unsignedBigInteger('Supervisor_ID');
         $table->string('Topic_Title');
