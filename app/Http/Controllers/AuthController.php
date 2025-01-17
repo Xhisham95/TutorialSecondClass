@@ -13,29 +13,29 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    if (Auth::attempt($request->only('email', 'password'))) {
-        $user = Auth::user();
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $user = Auth::user();
 
-        // Redirect based on role
-        if ($user->Role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->Role === 'supervisor') {
-            return redirect()->route('supervisor.dashboard');
-        } elseif ($user->Role === 'student') {
-            return redirect()->route('student.dashboard');
+            // Redirect based on role
+            if ($user->Role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->Role === 'supervisor') {
+                return redirect()->route('supervisor.dashboard');
+            } elseif ($user->Role === 'student') {
+                return redirect()->route('student.dashboard');
+            }
+
+            return redirect()->route('login'); // Fallback in case role is not recognized
         }
 
-        return redirect()->route('login'); // Fallback in case role is not recognized
+        return back()->withErrors(['email' => 'Invalid credentials.']);
     }
-
-    return back()->withErrors(['email' => 'Invalid credentials.']);
-}
 
 
     public function logout(Request $request)
@@ -44,4 +44,3 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 }
-
