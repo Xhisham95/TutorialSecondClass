@@ -8,7 +8,7 @@ class DashboardController extends Controller
 {
     public function adminDashboard()
     {
-        return view('dashboard.admin');
+        return view('admin.dashboard');
     }
 
     public function supervisorDashboard()
@@ -18,6 +18,6 @@ class DashboardController extends Controller
 
     public function studentDashboard()
     {
-        return view('dashboard.student');
+        return view('student.dashboard');
     }
 }
