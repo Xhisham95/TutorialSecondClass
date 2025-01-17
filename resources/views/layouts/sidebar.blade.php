@@ -20,27 +20,30 @@
             </li>
 
             <!-- Manage Users Menu Item -->
-            <li class="side-nav-item">
-                <a href="{{ route('users.index') }}" class="side-nav-link">
-                    <i class="uil-users-alt"></i>
-                    <span> Manage Users </span>
-                </a>
-            </li>
+            @if(auth()->user()->Role === 'admin')
+                <li class="side-nav-item">
+                    <a href="{{ route('users.index') }}" class="side-nav-link">
+                        <i class="uil-users-alt"></i>
+                        <span> Manage Users </span>
+                    </a>
+                </li>
+            @endif
 
             <!-- View and Generate Reports -->
-            <li class="side-nav-item">
-                <a href="{{ route('reports.users') }}" class="side-nav-link">
-                    <i class="uil-chart"></i>
-                    <span> View & Generate Report </span>
-                </a>
-            </li>
+            @if(auth()->user()->Role === 'admin' || auth()->user()->Role === 'supervisor')
+                <li class="side-nav-item">
+                    <a href="{{ route('reports.users') }}" class="side-nav-link">
+                        <i class="uil-chart"></i>
+                        <span> View & Generate Report </span>
+                    </a>
+                </li>
+            @endif
 
-            <!-- Add other sidebar items as needed -->
             <!-- Add Manage Quota for Admins -->
             @if(auth()->user()->Role === 'admin')
                 <li class="side-nav-item">
                     <a href="{{ route('quota.index') }}" class="side-nav-link">
-                        <i class="uil-cog"></i> <!-- Add appropriate icon -->
+                        <i class="uil-cog"></i>
                         <span> Manage Quota </span>
                     </a>
                 </li>
@@ -48,7 +51,7 @@
                 <!-- Add Manage TimeFrame for Admins -->
                 <li class="side-nav-item">
                     <a href="{{ route('timeframes.index') }}" class="side-nav-link">
-                        <i class="uil-calendar-alt"></i> <!-- Add appropriate icon -->
+                        <i class="uil-calendar-alt"></i>
                         <span> Manage TimeFrame </span>
                     </a>
                 </li>
