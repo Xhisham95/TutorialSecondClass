@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('file_uploads', function (Blueprint $table) {
-            $table->id('File_ID');
+            $table->id();
             $table->unsignedBigInteger('Student_ID');
             $table->unsignedBigInteger('Topic_ID'); // Match the primary key of `project_topics`
             $table->string('File_Name');
@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
     
             $table->foreign('Student_ID')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('Topic_ID')->references('Topic_ID')->on('project_topics')->onDelete('cascade'); // Reference `Topic_ID`
+            $table->foreign('Topic_ID')->references('id')->on('project_topics')->onDelete('cascade'); // Reference `Topic_ID`
         });
     }
     

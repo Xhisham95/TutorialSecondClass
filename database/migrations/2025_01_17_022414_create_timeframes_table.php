@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('timeframes', function (Blueprint $table) {
-            $table->id('TimeFrame_ID'); // Primary Key
-            $table->date('Start_Date'); // Start date of the hunting timeframe
-            $table->date('End_Date');   // End date of the hunting timeframe
-            $table->string('Semester'); // Semester or session name (e.g., Fall 2024)
-            $table->timestamps();      // Created and updated timestamps
+            $table->id(); // Primary Key
+            $table->string('Event_Type'); // Event type (e.g., Choose Topic, Choose Supervisor)
+            $table->date('Start_Date');   // Start date of the timeframe
+            $table->date('End_Date');     // End date of the timeframe
+            $table->string('Semester');  // Semester or session name (e.g., Spring 2025)
+            $table->timestamps();        // Created and updated timestamps
         });
     }
 

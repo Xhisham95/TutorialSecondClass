@@ -3,12 +3,37 @@
         <ul class="metismenu side-nav">
             <li class="side-nav-title">Menu</li>
             <li class="side-nav-item">
-                <a href="{{ route('dashboard') }}" class="side-nav-link">
+                <a href="
+                    @if(auth()->user()->Role === 'admin')
+                        {{ route('admin.dashboard') }}
+                    @elseif(auth()->user()->Role === 'supervisor')
+                        {{ route('supervisor.dashboard') }}
+                    @elseif(auth()->user()->Role === 'student')
+                        {{ route('student.dashboard') }}
+                    @endif
+                " class="side-nav-link">
                     <i class="uil-home-alt"></i>
                     <span> Dashboard </span>
                 </a>
             </li>
-            <!-- Add other sidebar items -->
+
+            <!-- Add Manage Quota for Admins -->
+            @if(auth()->user()->Role === 'admin')
+                <li class="side-nav-item">
+                    <a href="{{ route('quota.index') }}" class="side-nav-link">
+                        <i class="uil-cog"></i> <!-- Add appropriate icon -->
+                        <span> Manage Quota </span>
+                    </a>
+                </li>
+
+                <!-- Add Manage TimeFrame for Admins -->
+                <li class="side-nav-item">
+                    <a href="{{ route('timeframes.index') }}" class="side-nav-link">
+                        <i class="uil-calendar-alt"></i> <!-- Add appropriate icon -->
+                        <span> Manage TimeFrame </span>
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </div>

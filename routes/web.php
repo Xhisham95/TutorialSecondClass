@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QuotaController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TopicController;
+use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\TimeFrameController;
+
 
 
 
@@ -20,10 +25,12 @@ Route::get('/dashboard', function () {
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-use App\Http\Controllers\DashboardController;
+
 
 // Admin Dashboard
 Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard')->middleware('auth');
+Route::get('/admin/quotas', [QuotaController::class, 'index'])->name('admin.quota.index'); // Admin-specific quota route
+
 
 // Supervisor Dashboard
 Route::get('/supervisor/dashboard', [DashboardController::class, 'supervisorDashboard'])->name('supervisor.dashboard')->middleware('auth');
@@ -40,4 +47,18 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/quota/{id}', [QuotaController::class, 'update'])->name('quota.update'); // Update quota
     Route::delete('/quota/{id}', [QuotaController::class, 'destroy'])->name('quota.destroy'); // Delete quota
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/timeframes', [TimeFrameController::class, 'index'])->name('timeframes.index');
+    Route::get('/timeframes/create', [TimeFrameController::class, 'create'])->name('timeframes.create');
+    Route::post('/timeframes', [TimeFrameController::class, 'store'])->name('timeframes.store');
+    Route::get('/timeframes/{id}/edit', [TimeFrameController::class, 'edit'])->name('timeframes.edit');
+    Route::put('/timeframes/{id}', [TimeFrameController::class, 'update'])->name('timeframes.update');
+    Route::delete('/timeframes/{id}', [TimeFrameController::class, 'destroy'])->name('timeframes.destroy');
+});
+
+
+
+
+
 
