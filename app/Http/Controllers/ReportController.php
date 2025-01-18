@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
+    /**
+     * Display the user report grouped by program.
+     */
     public function userReport()
     {
         // Fetch users grouped by program
@@ -18,7 +22,10 @@ class ReportController extends Controller
         return view('admin.reports.users', compact('usersByProgram'));
     }
 
-    public function exportUserReport()
+    /**
+     * Export the user report as a PDF.
+     */
+    public function exportUserReportPDF()
     {
         // Fetch users grouped by program
         $usersByProgram = User::select('Program')
@@ -26,15 +33,10 @@ class ReportController extends Controller
             ->groupBy('Program')
             ->get();
 
-        // Generate CSV content
-        $csvHeader = "Program,Total Users\n";
-        $csvContent = $usersByProgram->reduce(function ($carry, $program) {
-            return $carry . ($program->Program ?? 'Not Assigned') . ',' . $program->total . "\n";
-        }, $csvHeader);
+        // Generate the PDF
+        $pdf = Pdf::loadView('admin.reports.user_report_pdf', compact('usersByProgram'));
 
-        // Return CSV response
-        return response($csvContent)
-            ->header('Content-Type', 'text/csv')
-            ->header('Content-Disposition', 'attachment; filename="user_report_by_program.csv"');
+        // Return the PDF for download
+        return $pdf->download('user_report_by_program.pdf');
     }
 }

@@ -55,4 +55,5 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     // Report Routes
     Route::get('/admin/reports/users', [ReportController::class, 'userReport'])->name('reports.users');
     Route::get('/admin/reports/users/export', [ReportController::class, 'exportUserReport'])->name('reports.users.export');
+    Route::get('/admin/reports/users/export/pdf', [ReportController::class, 'exportUserReportPDF'])->name('reports.users.export.pdf');
 });
