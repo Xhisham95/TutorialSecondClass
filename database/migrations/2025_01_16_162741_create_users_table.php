@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('Email')->nullable();
             $table->string('Role'); // Admin, Supervisor, or Student
             $table->string('Program')->nullable();
-            $table->boolean('password_changed')->default(false); // Tracks if the user changed their password
+            $table->boolean('password_changed')->default(value: false); // Tracks if the user changed their password
             $table->timestamps();
         });
     }

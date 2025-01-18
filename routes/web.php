@@ -29,6 +29,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/supervisor/dashboard', [DashboardController::class, 'supervisorDashboard'])->name('supervisor.dashboard');
     Route::get('/student/dashboard', [DashboardController::class, 'studentDashboard'])->name('student.dashboard');
 
+
     // Quota Routes
     Route::get('/Quota', [QuotaController::class, 'index'])->name('quota.index');
     Route::get('/quota/create', [QuotaController::class, 'create'])->name('quota.create');
@@ -49,7 +50,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/admin/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/admin/users/store', [UserController::class, 'store'])->name('users.store');
     Route::get('/admin/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::post('/admin/users/{id}/update', [UserController::class, 'update'])->name('users.update');
+    Route::post('/admin/users/{id}/update', [UserController::class, 'update'])->name(name: 'users.update');
     Route::delete('/admin/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // Report Routes
@@ -57,3 +58,4 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/admin/reports/users/export', [ReportController::class, 'exportUserReport'])->name('reports.users.export');
     Route::get('/admin/reports/users/export/pdf', [ReportController::class, 'exportUserReportPDF'])->name('reports.users.export.pdf');
 });
+
