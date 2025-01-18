@@ -12,9 +12,9 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::paginate(10); // Fetch users with pagination
+        $users = User::paginate($request->get('per_page', 10)); // Fetch users with pagination
         return view('admin.upload_users', compact('users'));
     }
 
@@ -34,20 +34,32 @@ class UserController extends Controller
         while ($row = fgetcsv($fileData)) {
             $data = array_combine($header, $row);
 
+            // Validate required fields
+            if (empty($data['UserName']) || empty($data['password']) || empty($data['Role'])) {
+                continue; // Skip this row if required fields are missing
+            }
+
             // Create user in the database
             $user = User::create([
                 'UserName' => $data['UserName'],
                 'password' => Hash::make($data['password']),
-                'Email' => $data['Email'],
+                'Email' => !empty($data['Email']) ? $data['Email'] : $data['UserName'] . '@example.com', // Default email if missing
                 'Role' => $data['Role'],
                 'Program' => $data['Program'] ?? null,
+                'password_changed' => false, // New users must change their password
             ]);
 
-            // Send notification email to the user
-            Mail::to($user->Email)->send(new \App\Mail\UserCredentialsMail($user, $data['password']));
+            // Sending email notification (commented out for now)
+            /*
+            try {
+                Mail::to($user->Email)->send(new \App\Mail\UserCredentialsMail($user, $data['password']));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send email to: ' . $user->Email);
+            }
+            */
         }
 
-        return redirect()->back()->with('success', 'Users uploaded successfully, and notifications have been sent!');
+        return redirect()->back()->with('success', 'Users uploaded successfully.');
     }
 
     /**
@@ -71,8 +83,15 @@ class UserController extends Controller
             'Program' => 'nullable|string|max:255',
         ]);
 
-        $user = User::findOrFail($id); // Find the user by ID
-        $user->update($request->all()); // Update user with validated data
+        $user = User::findOrFail($id);
+        $data = $request->only(['UserName', 'Email', 'Role', 'Program']);
+
+        // Avoid overwriting sensitive fields unless provided
+        if ($request->has('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
