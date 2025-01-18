@@ -7,9 +7,12 @@
         <form action="{{ route('quota.update', $quota->id) }}" method="POST">
             @csrf
             @method('PUT')
+
             <div class="form-group">
                 <label for="QuotaNumber">Quota</label>
                 <input type="number" name="QuotaNumber" id="QuotaNumber" value="{{ $quota->QuotaNumber }}" class="form-control" required>
+            </div>
+
             <button type="submit" class="btn btn-success mt-3">Update</button>
         </form>
     </div>

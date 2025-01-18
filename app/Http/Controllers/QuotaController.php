@@ -42,18 +42,18 @@ class QuotaController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'QuotaNumber' => 'required|integer|min:1|max:15',
-            'Start_Date' => 'required|date',
-            'End_Date' => 'required|date|after_or_equal:Start_Date',
-        ]);
+{
+    $request->validate([
+        'QuotaNumber' => 'required|integer|min:1|max:15',
+    ]);
 
-        $quota = Quota::findOrFail($id);
-        $quota->update($request->all());
+    $quota = Quota::findOrFail($id);
+    $quota->update($request->only('QuotaNumber'));
 
-        return redirect()->route('quota.index')->with('success', 'Quota updated successfully.');
-    }
+    return redirect()->route('quota.index')->with('success', 'Quota updated successfully.');
+}
+
+
 
     public function destroy($id)
     {
