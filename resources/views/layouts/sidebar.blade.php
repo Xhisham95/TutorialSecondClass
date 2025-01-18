@@ -19,7 +19,7 @@
                 </a>
             </li>
 
-            <!-- Manage Users Menu Item -->
+            <!-- Admin-Specific Links -->
             @if(auth()->user()->Role === 'admin')
                 <li class="side-nav-item">
                     <a href="{{ route('users.index') }}" class="side-nav-link">
@@ -27,20 +27,7 @@
                         <span> Manage Users </span>
                     </a>
                 </li>
-            @endif
 
-            <!-- View and Generate Reports -->
-            @if(auth()->user()->Role === 'admin' || auth()->user()->Role === 'supervisor')
-                <li class="side-nav-item">
-                    <a href="{{ route('reports.users') }}" class="side-nav-link">
-                        <i class="uil-chart"></i>
-                        <span> View & Generate Report </span>
-                    </a>
-                </li>
-            @endif
-
-            <!-- Add Manage Quota for Admins -->
-            @if(auth()->user()->Role === 'admin')
                 <li class="side-nav-item">
                     <a href="{{ route('quota.index') }}" class="side-nav-link">
                         <i class="uil-cog"></i>
@@ -48,11 +35,47 @@
                     </a>
                 </li>
 
-                <!-- Add Manage TimeFrame for Admins -->
                 <li class="side-nav-item">
                     <a href="{{ route('timeframes.index') }}" class="side-nav-link">
                         <i class="uil-calendar-alt"></i>
                         <span> Manage TimeFrame </span>
+                    </a>
+                </li>
+            @endif
+
+            <!-- Supervisor-Specific Links -->
+            @if(auth()->user()->Role === 'supervisor')
+                <li class="side-nav-item">
+                    <a href="{{ route('topics.index') }}" class="side-nav-link">
+                        <i class="uil-file-plus"></i>
+                        <span> Manage Topics </span>
+                    </a>
+                </li>
+
+                <li class="side-nav-item">
+                    <a href="{{ route('applications.index') }}" class="side-nav-link">
+                        <i class="uil-check-square"></i>
+                        <span> Manage Applications </span>
+                    </a>
+                </li>
+            @endif
+
+            <!-- Student-Specific Links -->
+            @if(auth()->user()->Role === 'student')
+            <li class="side-nav-item">
+                <a href="{{ route('students.view-topics') }}" class="side-nav-link">
+                    <i class="uil-folder-plus"></i>
+                    <span> View Topics </span>
+                </a>
+            </li>
+            @endif
+
+            <!-- Reports for Admin and Supervisor -->
+            @if(auth()->user()->Role === 'admin' || auth()->user()->Role === 'supervisor')
+                <li class="side-nav-item">
+                    <a href="{{ route('reports.users') }}" class="side-nav-link">
+                        <i class="uil-chart"></i>
+                        <span> View & Generate Report </span>
                     </a>
                 </li>
             @endif

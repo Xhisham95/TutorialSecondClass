@@ -7,6 +7,17 @@
         <form action="{{ route('timeframes.store') }}" method="POST">
             @csrf
             <div class="form-group">
+                <label for="Event_Type">Event Type</label>
+                <select name="Event_Type" id="Event_Type" class="form-control" required>
+                    <option value="">Select an Event Type</option>
+                    <option value="Choose Supervisor">Choose Supervisor</option>
+                    <option value="Upload Documents">Upload Documents</option>
+                    <option value="Supervisor Post Topics">Supervisor Post Topics</option>
+                    <option value="Student Apply for Topics">Student Apply for Topics</option>
+                    <option value="Supervisor Accept Applications">Supervisor Accept Applications</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="Start_Date">Start Date</label>
                 <input type="date" name="Start_Date" id="Start_Date" class="form-control" required>
             </div>

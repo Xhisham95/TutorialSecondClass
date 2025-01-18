@@ -8,6 +8,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TimeFrameController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PasswordChangeController;
+use App\Http\Middleware\CheckTimeFrame;
+use App\Http\Controllers\ChooseSupervisorController;
+use App\Http\Controllers\TopicController;
+use App\Http\Controllers\ApplicationController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,7 +32,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     // Dashboard Routes
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
     Route::get('/supervisor/dashboard', [DashboardController::class, 'supervisorDashboard'])->name('supervisor.dashboard');
-    Route::get('/student/dashboard', [DashboardController::class, 'studentDashboard'])->name('student.dashboard');
+    Route::get('/students/dashboard', [DashboardController::class, 'studentDashboard'])->name('student.dashboard');
 
 
     // Quota Routes
@@ -57,5 +62,42 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/admin/reports/users', [ReportController::class, 'userReport'])->name('reports.users');
     Route::get('/admin/reports/users/export', [ReportController::class, 'exportUserReport'])->name('reports.users.export');
     Route::get('/admin/reports/users/export/pdf', [ReportController::class, 'exportUserReportPDF'])->name('reports.users.export.pdf');
+
+    
+
+    // Supervisor Post Topics
+    Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Post Topics'])->group(function () {
+    Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
+    Route::get('/topics/create', [TopicController::class, 'create'])->name('topics.create');
+    Route::post('/topics', [TopicController::class, 'store'])->name('topics.store');
+});
+
+// Student Routes
+Route::middleware(['auth', CheckTimeFrame::class . ':Student Apply for Topics'])->group(function () {
+    Route::get('/students/view-topics', [TopicController::class, 'viewTopics'])->name('students.view-topics');
+    Route::post('/students/search-topics', [TopicController::class, 'searchTopics'])->name('students.search-topics');
+});
+
+
+// Supervisor Accept Applications
+Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Accept Applications'])->group(function () {
+    Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+    Route::post('/applications/{id}/review', [ApplicationController::class, 'review'])->name('applications.review');
+});
+
+Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
+
+
+
+
+
+
+    
+    
+    
+    
+
+
+
 });
 

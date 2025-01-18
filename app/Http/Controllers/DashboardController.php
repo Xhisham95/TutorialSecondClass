@@ -18,6 +18,6 @@ class DashboardController extends Controller
 
     public function studentDashboard()
     {
-        return view('student.dashboard');
+        return view('students.dashboard');
     }
 }

@@ -25,10 +25,11 @@ class TimeFrameController extends Controller
             'End_Date' => 'required|date|after_or_equal:Start_Date',
             'Semester' => 'required|string|max:255',
         ]);
-
+        
         TimeFrame::create($request->all());
-
+        
         return redirect()->route('timeframes.index')->with('success', 'Timeframe created successfully.');
+        
     }
 
     public function edit($id)
@@ -38,19 +39,27 @@ class TimeFrameController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'Event_Type' => 'required|string|max:255',
-            'Start_Date' => 'required|date',
-            'End_Date' => 'required|date|after_or_equal:Start_Date',
-            'Semester' => 'required|string|max:255',
-        ]);
+{
+    $timeframe = TimeFrame::findOrFail($id);
 
-        $timeframe = TimeFrame::findOrFail($id);
-        $timeframe->update($request->all());
+    $request->validate([
+        'Event_Type' => 'required|string|max:255',
+        'Start_Date' => 'required|date',
+        'End_Date' => 'required|date|after_or_equal:Start_Date',
+        'Semester' => 'required|string|max:255',
+    ]);
 
-        return redirect()->route('timeframes.index')->with('success', 'Timeframe updated successfully.');
-    }
+    // Update only the provided fields
+    $timeframe->update([
+        'Event_Type' => $request->Event_Type,
+        'Start_Date' => $request->Start_Date,
+        'End_Date' => $request->End_Date,
+        'Semester' => $request->Semester,
+    ]);
+
+    return redirect()->route('timeframes.index')->with('success', 'Timeframe updated successfully.');
+}
+
 
     public function destroy($id)
     {

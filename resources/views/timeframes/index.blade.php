@@ -15,6 +15,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Event Type</th>
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Semester</th>
@@ -25,6 +26,7 @@
                 @foreach($timeframes as $timeframe)
                     <tr>
                         <td>{{ $timeframe->id }}</td>
+                        <td>{{ $timeframe->Event_Type }}</td> <!-- Display the Event Type -->
                         <td>{{ $timeframe->Start_Date }}</td>
                         <td>{{ $timeframe->End_Date }}</td>
                         <td>{{ $timeframe->Semester }}</td>
