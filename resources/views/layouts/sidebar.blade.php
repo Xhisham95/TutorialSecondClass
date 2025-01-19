@@ -65,10 +65,16 @@
                         <span> View Topics </span>
                     </a>
                 </li>
+                <li class="side-nav-item">
+                    <a href="{{ route('students.view-status') }}" class="side-nav-link">
+                        <i class="uil-folder-plus"></i>
+                        <span> View Topics Status</span>
+                    </a>
+                </li>
             @endif
 
             <!-- Reports for Admin and Supervisor -->
-            @if(auth()->user()->Role === 'admin' || auth()->user()->Role === 'supervisor')
+            @if(auth()->user()->Role === 'admin')
                 <li class="side-nav-item">
                     <a href="{{ route('reports.users') }}" class="side-nav-link">
                         <i class="uil-chart"></i>

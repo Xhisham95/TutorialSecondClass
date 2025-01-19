@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -44,6 +44,18 @@ class TopicController extends Controller
     return view('students.view-topics', compact('supervisors'));
 }
 
+
+public function viewTopicStatus()
+{
+    // Get the currently logged-in user
+    $studentId = auth()->user()->id;
+
+    // Get topics for the logged-in student
+    $topics = ProjectTopic::where('Student_ID', $studentId)->get();
+
+    return view('students.view-status', compact('topics'));
+}
+
 public function searchTopics(Request $request)
 {
     $request->validate([
@@ -60,6 +72,20 @@ public function searchTopics(Request $request)
     return view('students.view-topics', compact('topics', 'supervisor', 'supervisors'));
 
 }
+
+public function applyTopic($id)
+{
+    $studentId = auth()->user()->id;
+
+    // Update the topic with the student ID
+    $topic = ProjectTopic::find($id);
+    $topic->Student_ID = $studentId;
+    $topic->Status = 'Closed'; // Optionally, mark the topic as closed
+    $topic->save();
+
+    return redirect()->back()->with('success', 'You have successfully applied for the topic.');
+}
+
 
 
 public function apply($id)

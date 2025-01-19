@@ -11,7 +11,7 @@
                 <label for="supervisor_id">Select Supervisor:</label>
                 <select name="supervisor_id" id="supervisor_id" class="form-control" required>
                     @foreach($supervisors as $supervisorOption)
-                        <option value="{{ $supervisorOption->id }}" 
+                        <option value="{{ $supervisorOption->id }}"
                             {{ isset($supervisor) && $supervisor->id == $supervisorOption->id ? 'selected' : '' }}>
                             {{ $supervisorOption->UserName }}
                         </option>
@@ -31,19 +31,21 @@
                         <p>{{ $topic->Topic_Description }}</p>
 
                         @if($topic->Status === 'Open')
-                            <form action="{{ route('students.apply-topic', $topic->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-sm">Apply</button>
-                            </form>
+                        <form action="{{ route('students.apply-topic', $topic->id) }}" method="POST" style="display:inline;">
+                          @csrf
+                          <input type="hidden" name="topic_id" value="{{ $topic->id }}">
+                          <button type="submit" class="btn btn-success btn-sm">Apply</button>
+                        </form>
                         @else
                             <span class="badge bg-secondary">Closed</span>
                         @endif
 
                     </li>
+
                 @empty
                     <li class="list-group-item">No topics available for this supervisor.</li>
                 @endforelse
             </ul>
-        @endif
-    </div>
+            @endif
+</div>
 @endsection

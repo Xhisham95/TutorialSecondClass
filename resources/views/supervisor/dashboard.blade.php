@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'supervisor Dashboard')
+@section('title', 'Supervisor Dashboard')
 
 @section('content')
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +13,20 @@
 <body>
     <h1>Welcome, Supervisor!</h1>
     <p>This is the supervisor dashboard.</p>
-    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
+
+    <h2>Your Topics</h2>
+    <ul class="list-group">
+        @forelse($topics as $topic)
+            <li class="list-group-item">
+                <strong>{{ $topic->Topic_Title }}</strong>
+                <p>{{ $topic->Topic_Description }}</p>
+                <p>Status: {{ $topic->Status }}</p>
+                <p>Assigned Student: {{ $topic->student ? $topic->student->UserName : 'Name' }}</p>
+            </li>
+        @empty
+            <li class="list-group-item">You have no topics.</li>
+        @endforelse
+    </ul>
 </body>
 </html>
+@endsection
