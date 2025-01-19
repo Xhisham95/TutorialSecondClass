@@ -28,7 +28,6 @@ class DashboardController extends Controller
 
     public function studentDashboard()
     {
-        // Logic for student-specific data if needed
         return view('students.dashboard');
     }
 }
