@@ -25,8 +25,7 @@
         </tbody>
     </table>
 
-    <!-- Buttons to export the report -->
-    <a href="{{ route('reports.users.export') }}" class="btn btn-primary mt-3">Export as CSV</a>
+    <!-- Button to export the report -->
     <a href="{{ route('reports.users.export.pdf') }}" class="btn btn-secondary mt-3">Export as PDF</a>
 </div>
 
