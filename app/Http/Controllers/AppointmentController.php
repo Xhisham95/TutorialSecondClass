@@ -3,93 +3,125 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Slot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
-    // Show the list of appointments for the authenticated user
-    public function index()
+    // View appointments based on role
+    public function manageAppointments()
     {
-        $appointments = Appointment::where('student_id', auth()->id())->get();
+        $user = Auth::user();
 
-        return view('appointments.index', compact('appointments'));
-    }
+        if ($user->Role === 'supervisor') {
+            // Fetch appointments for supervisor
+            $appointments = Appointment::with('student', 'slot')
+                ->whereHas('slot', function ($query) use ($user) {
+                    $query->where('supervisor_id', $user->id);
+                })
+                ->get();
 
-    // Show the form to create an appointment
-    public function createForm()
-    {
-        // Pass a list of supervisors to the view (assuming you have a User model with a supervisor role)
-        $supervisors = \App\Models\User::where('role', 'supervisor')->get();
+            return view('supervisors.appointments', compact('appointments'));
+        } elseif ($user->Role === 'student') {
+            // Fetch appointments for student
+            $appointments = Appointment::with('slot')
+                ->where('student_id', $user->id)
+                ->get();
 
-        return view('appointments.create', compact('supervisors'));
-    }
+            return view('students.appointments', compact('appointments'));
+        } elseif ($user->Role === 'admin') {
+            // Fetch all appointments for admin
+            $appointments = Appointment::with(['student', 'slot.supervisor'])->get();
 
-    // Create a new appointment
-    public function create(Request $request)
-    {
-        $validated = $request->validate([
-            'supervisor_id' => 'required|exists:users,id',
-            'appointment_date' => 'required|date|after:now',
-            'appointment_time' => 'required',
-        ]);
-
-        // Check if the student already has an appointment with the same supervisor in the current week
-        $existing = Appointment::where('student_id', auth()->id())
-            ->where('supervisor_id', $validated['supervisor_id'])
-            ->whereBetween('appointment_date', [now()->startOfWeek(), now()->endOfWeek()])
-            ->first();
-
-        if ($existing) {
-            return back()->withErrors(['error' => 'You can only book one appointment with this supervisor per week.']);
+            return view('admin.appointments', compact('appointments'));
         }
 
-        Appointment::create([
-            'student_id' => auth()->id(),
-            'supervisor_id' => $validated['supervisor_id'],
-            'appointment_date' => $validated['appointment_date'],
-            'appointment_time' => $validated['appointment_time'],
-            'status' => 'Pending',
-        ]);
-
-        return redirect()->route('appointments.index')->with('success', 'Appointment created successfully!');
+        // If role is not recognized, deny access
+        return abort(403, 'Unauthorized action.');
     }
 
-    // Cancel an appointment
-    public function cancel(Appointment $appointment)
+
+    public function addSlot(Request $request)
     {
-        // Ensure the appointment belongs to the authenticated user and is pending
-        if ($appointment->student_id !== auth()->id() || $appointment->status !== 'Pending') {
-            return back()->withErrors(['error' => 'You can only cancel your pending appointments.']);
+        $user = Auth::user();
+
+        if ($user->role === 'supervisor') {
+            $validated = $request->validate([
+                'date' => 'required|date',
+                'start_time' => 'required|date_format:H:i',
+                'end_time' => 'required|date_format:H:i|after:start_time',
+            ]);
+
+            Slot::create([
+                'supervisor_id' => $user->id,
+                'date' => $validated['date'],
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'available' => true,
+            ]);
+
+            return redirect()->route('appointments.manage')->with('success', 'Slot added successfully.');
         }
 
-        $appointment->update(['status' => 'Cancelled']);
-
-        return back()->with('success', 'Appointment canceled successfully!');
+        return abort(403, 'Unauthorized action.');
     }
 
-    // Approve an appointment (Supervisor action)
-    public function approve(Appointment $appointment)
+    public function applyForAppointment(Request $request)
     {
-        // Ensure the authenticated user is the supervisor for this appointment
-        if ($appointment->supervisor_id !== auth()->id() || $appointment->status !== 'Pending') {
-            return back()->withErrors(['error' => 'You can only approve pending appointments assigned to you.']);
+        $user = Auth::user();
+
+        if ($user->role === 'student') {
+            $validated = $request->validate([
+                'slot_id' => 'required|exists:slots,id',
+            ]);
+
+            $slot = Slot::find($validated['slot_id']);
+            if (!$slot || !$slot->available) {
+                return back()->withErrors(['slot' => 'This slot is no longer available.']);
+            }
+
+            Appointment::create([
+                'student_id' => $user->id,
+                'slot_id' => $slot->id,
+                'status' => 'Pending',
+            ]);
+
+            $slot->update(['available' => false]);
+
+            return redirect()->route('appointments.manage')->with('success', 'Appointment requested successfully.');
         }
 
-        $appointment->update(['status' => 'Approved']);
-
-        return back()->with('success', 'Appointment approved successfully!');
+        return abort(403, 'Unauthorized action.');
     }
 
-    // Reject an appointment (Supervisor action)
-    public function reject(Appointment $appointment)
+    public function manageAppointmentStatus(Request $request, Appointment $appointment)
     {
-        // Ensure the authenticated user is the supervisor for this appointment
-        if ($appointment->supervisor_id !== auth()->id() || $appointment->status !== 'Pending') {
-            return back()->withErrors(['error' => 'You can only reject pending appointments assigned to you.']);
+        $user = Auth::user();
+
+        if ($user->role === 'supervisor') {
+            $validated = $request->validate([
+                'status' => 'required|in:Approved,Rejected',
+            ]);
+
+            if ($appointment->slot->supervisor_id !== $user->id) {
+                return abort(403, 'Unauthorized action.');
+            }
+
+            $appointment->update(['status' => $validated['status']]);
+
+            return redirect()->route('appointments.manage')->with('success', 'Appointment status updated successfully.');
         }
 
-        $appointment->update(['status' => 'Rejected']);
+        return abort(403, 'Unauthorized action.');
+    }
 
-        return back()->with('success', 'Appointment rejected successfully!');
+    public function adminView()
+    {
+        // Get all appointments
+        $appointments = Appointment::with(['student', 'supervisor', 'slot'])->get();
+
+        // Pass appointments to the view
+        return view('admin.appointments', compact('appointments'));
     }
 }
