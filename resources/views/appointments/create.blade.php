@@ -9,3 +9,4 @@
     <input type="time" name="appointment_time" required>
     <button type="submit">Request Appointment</button>
 </form>
+@endsection

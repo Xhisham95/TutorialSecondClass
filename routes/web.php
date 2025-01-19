@@ -13,6 +13,7 @@ use App\Http\Middleware\CheckTimeFrame;
 use App\Http\Controllers\ChooseSupervisorController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\SupervisorController;
 
 
 
@@ -77,10 +78,14 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     // Student Routes
     Route::middleware(['auth', CheckTimeFrame::class . ':Student Apply for Topics'])->group(function () {
         Route::get('/students/view-topics', [TopicController::class, 'viewTopics'])->name('students.view-topics');
+        Route::get('/students/view-status', [TopicController::class, 'viewTopicStatus'])->name('students.view-status');
+        Route::post('/students/apply-topic/{id}', [TopicController::class, 'applyTopic'])->name('students.apply-topic');
         Route::post('/students/search-topics', [TopicController::class, 'searchTopics'])->name('students.search-topics');
     });
 
-
+    Route::get('/supervisor/dashboard', [SupervisorController::class, 'dashboard'])->name('supervisor.dashboard');
+    Route::post('/supervisor/approve-application/{id}', [SupervisorController::class, 'approveApplication'])->name('supervisor.approve-application');
+    Route::post('/supervisor/reject-application/{id}', [SupervisorController::class, 'rejectApplication'])->name('supervisor.reject-application');
     // Supervisor Accept Applications
     Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Accept Applications'])->group(function () {
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');

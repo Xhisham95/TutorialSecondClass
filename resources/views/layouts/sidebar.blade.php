@@ -65,6 +65,7 @@
 
             <!-- Student-Specific Links -->
             @if(auth()->user()->Role === 'student')
+<<<<<<< HEAD
             <li class="side-nav-item">
                 <a href="{{ route('students.view-topics') }}" class="side-nav-link">
                     <i class="uil-folder-plus"></i>
@@ -81,6 +82,30 @@
                     <span> View & Generate Report </span>
                 </a>
             </li>
+=======
+                <li class="side-nav-item">
+                    <a href="{{ route('students.view-topics') }}" class="side-nav-link">
+                        <i class="uil-folder-plus"></i>
+                        <span> View Topics </span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
+                    <a href="{{ route('students.view-status') }}" class="side-nav-link">
+                        <i class="uil-folder-plus"></i>
+                        <span> View Topics Status</span>
+                    </a>
+                </li>
+            @endif
+
+            <!-- Reports for Admin and Supervisor -->
+            @if(auth()->user()->Role === 'admin')
+                <li class="side-nav-item">
+                    <a href="{{ route('reports.users') }}" class="side-nav-link">
+                        <i class="uil-chart"></i>
+                        <span> View & Generate Report </span>
+                    </a>
+                </li>
+>>>>>>> d3dfae783a1dcc376e96438e668ae5ddac824587
             @endif
         </ul>
     </div>
