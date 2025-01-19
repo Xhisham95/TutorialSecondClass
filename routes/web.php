@@ -16,6 +16,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\SupervisorController;
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -103,11 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
 });
 
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name(name: 'appointments.index');
-    Route::get('/appointments/create', [AppointmentController::class, 'createForm'])->name('appointments.createForm');
-    Route::post('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
-    Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
-    Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
+    Route::get('/appointments', [AppointmentController::class, 'manageAppointments'])->name('appointments.index');
 });

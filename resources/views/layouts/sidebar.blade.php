@@ -39,6 +39,12 @@
                         <span> Manage TimeFrame </span>
                     </a>
                 </li>
+                <li class="side-nav-item">
+                <a href="{{ route('appointments.index') }}" class="side-nav-link">
+                    <i class="uil-calendar-alt"></i>
+                    <span> Manage Appointment </span>
+                </a>
+            </li>
             @endif
 
             <!-- Supervisor-Specific Links -->
