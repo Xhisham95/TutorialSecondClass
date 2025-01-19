@@ -10,6 +10,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PasswordChangeController;
 use App\Http\Controllers\AppointmentController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -59,7 +60,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/admin/reports/users/export/pdf', [ReportController::class, 'exportUserReportPDF'])->name('reports.users.export.pdf');
 });
 
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-    Route::post('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::get('/appointments', [AppointmentController::class, 'manageAppointments'])->name('appointments.index');
 });

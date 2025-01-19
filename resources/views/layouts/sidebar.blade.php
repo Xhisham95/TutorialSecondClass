@@ -58,7 +58,7 @@
 
             <li class="side-nav-item">
                 <a href="{{ route('appointments.index') }}" class="side-nav-link">
-                    <i class="uil-cog"></i>
+                    <i class="uil-calendar-alt"></i>
                     <span> Manage Appointment </span>
                 </a>
             </li>

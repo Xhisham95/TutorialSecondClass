@@ -9,10 +9,15 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'student_id',
-        'supervisor_id',
-        'appointment_date',
-        'appointment_time',
-    ];
+    protected $fillable = ['student_id', 'slot_id', 'status'];
+
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id');
+    }
+
+    public function slot()
+    {
+        return $this->belongsTo(Slot::class);
+    }
 }

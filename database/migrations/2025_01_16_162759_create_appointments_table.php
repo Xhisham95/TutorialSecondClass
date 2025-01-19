@@ -11,13 +11,12 @@ class CreateAppointmentsTable extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->unsignedBigInteger('supervisor_id');
-            $table->date('appointment_date');
-            $table->time('appointment_time');
+            $table->unsignedBigInteger('slot_id'); // Link to the selected slot
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('supervisor_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('slot_id')->references('id')->on('slots')->onDelete('cascade');
         });
     }
 
