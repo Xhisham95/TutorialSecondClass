@@ -14,16 +14,5 @@ class Appointment extends Model
         'supervisor_id',
         'appointment_date',
         'appointment_time',
-        'status',
     ];
-
-    public function student()
-    {
-        return $this->belongsTo(User::class, 'student_id');
-    }
-
-    public function supervisor()
-    {
-        return $this->belongsTo(User::class, 'supervisor_id');
-    }
 }

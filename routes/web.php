@@ -60,10 +60,6 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name(name: 'appointments.index');
-    Route::get('/appointments/create', [AppointmentController::class, 'createForm'])->name('appointments.createForm');
-    Route::post('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
-    Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
-    Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::post('/appointments/create', [AppointmentController::class, 'create'])->name('appointments.create');
 });
