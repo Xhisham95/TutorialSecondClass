@@ -27,28 +27,12 @@
                         <span> Manage Users </span>
                     </a>
                 </li>
-            @endif
-
-            <!-- View and Generate Reports -->
-            @if(auth()->user()->Role === 'admin' || auth()->user()->Role === 'supervisor')
-                <li class="side-nav-item">
-                    <a href="{{ route('reports.users') }}" class="side-nav-link">
-                        <i class="uil-chart"></i>
-                        <span> View & Generate Report </span>
-                    </a>
-                </li>
-            @endif
-
-            <!-- Add Manage Quota for Admins -->
-            @if(auth()->user()->Role === 'admin')
                 <li class="side-nav-item">
                     <a href="{{ route('quota.index') }}" class="side-nav-link">
                         <i class="uil-cog"></i>
                         <span> Manage Quota </span>
                     </a>
                 </li>
-
-                <!-- Add Manage TimeFrame for Admins -->
                 <li class="side-nav-item">
                     <a href="{{ route('timeframes.index') }}" class="side-nav-link">
                         <i class="uil-calendar-alt"></i>
@@ -65,7 +49,6 @@
                         <span> Manage Topics </span>
                     </a>
                 </li>
-
                 <li class="side-nav-item">
                     <a href="{{ route('applications.index') }}" class="side-nav-link">
                         <i class="uil-check-square"></i>
@@ -76,12 +59,12 @@
 
             <!-- Student-Specific Links -->
             @if(auth()->user()->Role === 'student')
-            <li class="side-nav-item">
-                <a href="{{ route('students.view-topics') }}" class="side-nav-link">
-                    <i class="uil-folder-plus"></i>
-                    <span> View Topics </span>
-                </a>
-            </li>
+                <li class="side-nav-item">
+                    <a href="{{ route('students.view-topics') }}" class="side-nav-link">
+                        <i class="uil-folder-plus"></i>
+                        <span> View Topics </span>
+                    </a>
+                </li>
             @endif
 
             <!-- Reports for Admin and Supervisor -->
