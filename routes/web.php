@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TimeFrameController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PasswordChangeController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Middleware\CheckTimeFrame;
 use App\Http\Controllers\ChooseSupervisorController;
 use App\Http\Controllers\TopicController;
@@ -86,4 +87,22 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     });
 
     Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name(name: 'appointments.index');
+    Route::get('/appointments/create', [AppointmentController::class, 'createForm'])->name('appointments.createForm');
+    Route::post('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
+    Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name(name: 'appointments.index');
+    Route::get('/appointments/create', [AppointmentController::class, 'createForm'])->name('appointments.createForm');
+    Route::post('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
+    Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
 });
