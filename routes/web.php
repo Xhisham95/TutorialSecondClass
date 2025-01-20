@@ -111,6 +111,12 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
         DB::table('notifications')->where('id', $id)->update(['is_read' => true]);
         return redirect()->back();
     })->name('notifications.markAsRead');
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/student/timeframes', [App\Http\Controllers\TimeFrameController::class, 'viewStudentTimeframes'])->name('student.timeframes');
+        Route::get('/supervisor/timeframes', [App\Http\Controllers\TimeFrameController::class, 'viewSupervisorTimeframes'])->name('supervisor.timeframes');
+    });
+    
     
     
     
