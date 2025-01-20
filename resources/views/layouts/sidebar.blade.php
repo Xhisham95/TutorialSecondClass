@@ -83,6 +83,12 @@
                     </a>
                 </li>
                 <li class="side-nav-item">
+                    <a href="{{ route('students.view-status') }}" class="side-nav-link">
+                        <i class="uil-calendar-alt"></i>
+                        <span> Applications Status </span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
                     <a href="{{ route('appointments.manage') }}" class="side-nav-link">
                         <i class="uil-calendar-alt"></i>
                         <span> Manage Appointment </span>
