@@ -33,6 +33,12 @@
                     </a>
                 </li>
                 <li class="side-nav-item">
+                    <a href="{{ route('admin.topics') }}" class="side-nav-link">
+                        <i class="uil-calendar-alt"></i>
+                        <span> View All Topics </span>
+                    </a>
+                </li>
+                <li class="side-nav-item">
                     <a href="{{ route('appointments.manage') }}" class="side-nav-link">
                         <i class="uil-calendar-alt"></i>
                         <span> Manage Appointment </span>

@@ -16,6 +16,7 @@ use App\Http\Controllers\TopicController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AdminController;
 
 
 
@@ -70,7 +71,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/admin/reports/users/export', [ReportController::class, 'exportUserReport'])->name('reports.users.export');
     Route::get('/admin/reports/users/export/pdf', [ReportController::class, 'exportUserReportPDF'])->name('reports.users.export.pdf');
 
-
+ Route::get('/admin/topics', [AdminController::class, 'viewAllTopics'])->name('admin.topics');
 
     // Supervisor Post Topics
     Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Post Topics'])->group(function () {
@@ -90,6 +91,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/supervisor/dashboard', [SupervisorController::class, 'dashboard'])->name('supervisor.dashboard');
     Route::post('/supervisor/approve-application/{id}', [SupervisorController::class, 'approveApplication'])->name('supervisor.approve-application');
     Route::post('/supervisor/reject-application/{id}', [SupervisorController::class, 'rejectApplication'])->name('supervisor.reject-application');
+
     // Supervisor Accept Applications
     Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Accept Applications'])->group(function () {
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
@@ -103,7 +105,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
-    
+
         return view('notifications.index', compact('notifications'));
     })->name('notifications.index');
 
@@ -116,15 +118,15 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
         Route::get('/student/timeframes', [App\Http\Controllers\TimeFrameController::class, 'viewStudentTimeframes'])->name('student.timeframes');
         Route::get('/supervisor/timeframes', [App\Http\Controllers\TimeFrameController::class, 'viewSupervisorTimeframes'])->name('supervisor.timeframes');
     });
-    
-    
-    
-    
 
 
 
-    
-    
+
+
+
+
+
+
 });
 
 //Appointment
