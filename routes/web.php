@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QuotaController;
@@ -95,16 +96,34 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
 });
 
+//Appointment
 Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name(name: 'appointments.index');
-    Route::get('/appointments/create', [AppointmentController::class, 'createForm'])->name('appointments.createForm');
-    Route::post('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
-    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
-    Route::post('/appointments/{appointment}/approve', [AppointmentController::class, 'approve'])->name('appointments.approve');
-    Route::post('/appointments/{appointment}/reject', [AppointmentController::class, 'reject'])->name('appointments.reject');
+    // Supervisor can manage their own appointments and slots
+    Route::get('/appointments/manage', [AppointmentController::class, 'manageAppointments'])->name('appointments.manage');
+
+    // Supervisor can add new slots
+    Route::post('/appointments/add-slot', [AppointmentController::class, 'addSlot'])->name('appointments.addSlot');
+
+    // Supervisor can toggle availability of slots (mark them available or unavailable)
+    Route::patch('/appointments/slots/{slotId}/toggle', [AppointmentController::class, 'toggleSlotAvailability'])->name('appointments.toggleAvailability');
+
+    // Supervisor can approve/reject an appointment request
+    Route::patch('/appointments/{appointment}/manage', [AppointmentController::class, 'manageAppointmentStatus'])->name('appointments.manageStatus');
+});
+
+//Student Appointment
+Route::middleware(['auth'])->group(function () {
+    // Student can request an appointment for an available slot
+    Route::post('/appointments/request', [AppointmentController::class, 'requestAppointment'])->name('appointments.request');
+
+    // Student can view their own appointments (pending, approved, rejected)
 });
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'manageAppointments'])->name('appointments.index');
+Route::get('/send-test-email', function () {
+    Mail::raw('This is a test email.', function ($message) {
+        $message->to('mus.razor@gmail.com')
+            ->subject('Test Email');
+    });
+    return 'Email sent successfully!';
 });
