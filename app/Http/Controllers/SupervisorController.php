@@ -7,6 +7,7 @@ use App\Models\ProjectTopic;
 use App\Models\User; // Import the User model
 use App\Models\Application;
 
+
 class SupervisorController extends Controller {
     public function dashboard()
     {

@@ -9,7 +9,7 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
 
-    <!-- App css -->
+    <!-- App CSS -->
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="light-style" />
 
@@ -80,6 +80,10 @@
             $('.alert').alert('close');
         }, 3000); // Automatically close after 3 seconds
     </script>
+
+    <!-- Bootstrap Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>

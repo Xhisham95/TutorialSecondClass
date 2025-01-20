@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ProjectTopic;
 use App\Models\User; // Import the User model
 
+
 class TopicController extends Controller
 {
     public function index()

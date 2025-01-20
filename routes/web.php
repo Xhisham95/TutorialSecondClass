@@ -14,6 +14,9 @@ use App\Http\Controllers\ChooseSupervisorController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\NotificationController;
+
+
 
 
 
@@ -93,6 +96,28 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     });
 
     Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
+
+    Route::get('/notifications', function () {
+        $notifications = DB::table('notifications')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return view('notifications.index', compact('notifications'));
+    })->name('notifications.index');
+
+    Route::get('/notifications/mark-as-read/{id}', function ($id) {
+        DB::table('notifications')->where('id', $id)->update(['is_read' => true]);
+        return redirect()->back();
+    })->name('notifications.markAsRead');
+    
+    
+    
+
+
+
+    
+    
 });
 
 Route::middleware(['auth'])->group(function () {
