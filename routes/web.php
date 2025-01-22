@@ -75,10 +75,11 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
 
     // Supervisor Post Topics
     Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Post Topics'])->group(function () {
-        Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
+        
         Route::get('/topics/create', [TopicController::class, 'create'])->name('topics.create');
         Route::post('/topics', [TopicController::class, 'store'])->name('topics.store');
     });
+    Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
 
     // Student Routes
     Route::middleware(['auth', CheckTimeFrame::class . ':Student Apply for Topics'])->group(function () {

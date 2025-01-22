@@ -2,7 +2,7 @@
     <div class="container-fluid d-flex justify-content-between align-items-center">
         <!-- Project Name -->
         <div class="navbar-brand text-primary">
-            My Laravel Project
+            FYP-GATE
         </div>
 
         <!-- Notifications -->

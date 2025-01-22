@@ -69,12 +69,13 @@ public function review(Request $request, $id)
 
         // Create a notification for the supervisor
         \DB::table('notifications')->insert([
-            'user_id' => $application->supervisor_id,
-            'message' => 'You have accepted an application for the topic.',
+            'user_id' => $quota->Supervisor_ID, // Send to the supervisor
+            'message' => "Your quota has been updated. Current quota: {$quota->current_quota}, Maximum quota: {$quota->QuotaNumber}.",
             'is_read' => false,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
 
         return redirect()->back()->with('success', 'Application accepted successfully.');
     }
