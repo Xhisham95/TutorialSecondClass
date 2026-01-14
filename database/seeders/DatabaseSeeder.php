@@ -16,8 +16,14 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'UserName' => 'testuser',
+            'Email' => 'test@example.com',
+            'password' => bcrypt('password'),
+            'Role' => 'admin',
+            'Program' => 'Computer Science',
         ]);
+
+        // Seed supervisors
+        $this->call(SupervisorSeeder::class);
     }
 }

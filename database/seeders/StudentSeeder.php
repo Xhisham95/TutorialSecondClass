@@ -5,17 +5,16 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 
-class SupervisorSeeder extends Seeder
+class StudentSeeder extends Seeder
 {
     public function run()
     {
         User::create([
-            'UserName' => 'Supervisor1',
-            'Email' => 'supervisor1@example.com',
+            'UserName' => 'student1',
+            'Email' => 'student1@example.com',
             'password' => bcrypt('password123'),
-            'Role' => 'supervisor',
-            'Program' => 'Engineering',
+            'Role' => 'student',
+            'Program' => 'Computer Science',
         ]);
     }
 }
-

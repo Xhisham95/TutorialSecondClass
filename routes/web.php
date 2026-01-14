@@ -85,7 +85,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::middleware(['auth', CheckTimeFrame::class . ':Student Apply for Topics'])->group(function () {
         Route::get('/students/view-topics', [TopicController::class, 'viewTopics'])->name('students.view-topics');
         Route::get('/students/view-status', [TopicController::class, 'viewTopicStatus'])->name('students.view-status');
-        Route::post('/students/apply-topic/{id}', [TopicController::class, 'applyTopic'])->name('students.apply-topic');
+        Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
         Route::post('/students/search-topics', [TopicController::class, 'searchTopics'])->name('students.search-topics');
     });
 
@@ -98,8 +98,6 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
         Route::post('/applications/{id}/review', [ApplicationController::class, 'review'])->name('applications.review');
     });
-
-    Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
 
     Route::get('/notifications', function () {
         $notifications = DB::table('notifications')
