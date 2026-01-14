@@ -17,6 +17,7 @@ class PasswordChangeController extends Controller
     {
         // Return the password change view (create this view as 'auth.change_password')
         return view('auth.change_password');
+        
     }
 
     /**
