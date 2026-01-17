@@ -11,15 +11,13 @@ class QuotaController extends Controller
     {
         $quotas = Quota::with('supervisor')->get(); // Load all quotas with related supervisor details
         return view('quota.index', compact('quotas'));
-
     }
 
     public function create()
     {
-            // Assuming 'Role' is the field used to define user roles
-    $supervisors = \App\Models\User::where('Role', 'supervisor')->get();
-
-    return view('quota.create', compact('supervisors'));
+        // Assuming 'Role' is the field used to define user roles
+        $supervisors = \App\Models\User::where('Role', 'supervisor')->get();
+        return view('quota.create', compact('supervisors'));
     }
 
     public function store(Request $request)
@@ -29,6 +27,13 @@ class QuotaController extends Controller
         'QuotaNumber' => 'required|integer|min:1|max:15',
     ]);
 
+    // Check if the supervisor already has a quota
+    $existingQuota = Quota::where('Supervisor_ID', $request->Supervisor_ID)->first();
+    if ($existingQuota) {
+        return redirect()->back()->with('error', 'The selected supervisor already has a quota.');
+    }
+
+    // Create the quota
     Quota::create($request->all());
 
     return redirect()->route('quota.index')->with('success', 'Quota created successfully.');
@@ -42,18 +47,27 @@ class QuotaController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'QuotaNumber' => 'required|integer|min:1|max:15',
-    ]);
+    {
+        $request->validate([
+            'QuotaNumber' => 'required|integer|min:1|max:15',
+        ]);
 
-    $quota = Quota::findOrFail($id);
-    $quota->update($request->only('QuotaNumber'));
+        $quota = Quota::findOrFail($id);
 
-    return redirect()->route('quota.index')->with('success', 'Quota updated successfully.');
-}
+        // Update the quota
+        $quota->update($request->only('QuotaNumber'));
 
+        // Create a notification for the supervisor
+        \DB::table('notifications')->insert([
+            'user_id' => $quota->Supervisor_ID, // Send to the supervisor
+            'message' => 'Your quota has been updated to ' . $request->QuotaNumber . '.',
+            'is_read' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
+        return redirect()->route('quota.index')->with('success', 'Quota updated successfully.');
+    }
 
     public function destroy($id)
     {
@@ -63,4 +77,3 @@ class QuotaController extends Controller
         return redirect()->route('quota.index')->with('success', 'Quota deleted successfully.');
     }
 }
-

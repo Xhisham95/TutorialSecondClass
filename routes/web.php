@@ -15,6 +15,10 @@ use App\Http\Controllers\ChooseSupervisorController;
 use App\Http\Controllers\TopicController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\SupervisorController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AdminController;
+
+
 
 
 
@@ -67,33 +71,61 @@ Route::middleware(['auth', \App\Http\Middleware\CheckPasswordChanged::class])->g
     Route::get('/admin/reports/users/export', [ReportController::class, 'exportUserReport'])->name('reports.users.export');
     Route::get('/admin/reports/users/export/pdf', [ReportController::class, 'exportUserReportPDF'])->name('reports.users.export.pdf');
 
-
+ Route::get('/admin/topics', [AdminController::class, 'viewAllTopics'])->name('admin.topics');
 
     // Supervisor Post Topics
     Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Post Topics'])->group(function () {
-        Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
+        
         Route::get('/topics/create', [TopicController::class, 'create'])->name('topics.create');
         Route::post('/topics', [TopicController::class, 'store'])->name('topics.store');
     });
+    Route::get('/topics', [TopicController::class, 'index'])->name('topics.index');
 
     // Student Routes
     Route::middleware(['auth', CheckTimeFrame::class . ':Student Apply for Topics'])->group(function () {
         Route::get('/students/view-topics', [TopicController::class, 'viewTopics'])->name('students.view-topics');
         Route::get('/students/view-status', [TopicController::class, 'viewTopicStatus'])->name('students.view-status');
-        Route::post('/students/apply-topic/{id}', [TopicController::class, 'applyTopic'])->name('students.apply-topic');
+        Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
         Route::post('/students/search-topics', [TopicController::class, 'searchTopics'])->name('students.search-topics');
     });
 
     Route::get('/supervisor/dashboard', [SupervisorController::class, 'dashboard'])->name('supervisor.dashboard');
     Route::post('/supervisor/approve-application/{id}', [SupervisorController::class, 'approveApplication'])->name('supervisor.approve-application');
     Route::post('/supervisor/reject-application/{id}', [SupervisorController::class, 'rejectApplication'])->name('supervisor.reject-application');
+
     // Supervisor Accept Applications
     Route::middleware(['auth', CheckTimeFrame::class . ':Supervisor Accept Applications'])->group(function () {
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
         Route::post('/applications/{id}/review', [ApplicationController::class, 'review'])->name('applications.review');
     });
 
-    Route::post('/topics/{id}/apply', [TopicController::class, 'apply'])->name('students.apply-topic');
+    Route::get('/notifications', function () {
+        $notifications = DB::table('notifications')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('notifications.index', compact('notifications'));
+    })->name('notifications.index');
+
+    Route::get('/notifications/mark-as-read/{id}', function ($id) {
+        DB::table('notifications')->where('id', $id)->update(['is_read' => true]);
+        return redirect()->back();
+    })->name('notifications.markAsRead');
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/student/timeframes', [App\Http\Controllers\TimeFrameController::class, 'viewStudentTimeframes'])->name('student.timeframes');
+        Route::get('/supervisor/timeframes', [App\Http\Controllers\TimeFrameController::class, 'viewSupervisorTimeframes'])->name('supervisor.timeframes');
+    });
+
+
+
+
+
+
+
+
+
 });
 
 //Appointment

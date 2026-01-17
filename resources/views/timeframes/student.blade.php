@@ -2,19 +2,7 @@
 
 @section('content')
     <div class="container-fluid mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Manage Timeframes</h2>
-            <a href="{{ route('timeframes.create') }}" class="btn btn-primary">
-                <i class="mdi mdi-plus-circle"></i> Add Timeframe
-            </a>
-        </div>
-
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
-                <i class="mdi mdi-check-circle"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
+        <h2 class="mb-4">Ongoing Timeframes</h2>
 
         @if(count($timeframes) > 0)
             <!-- Enhanced Search Filter -->
@@ -86,9 +74,7 @@
                 </div>
             </div>
 
-            <!-- Timeline Visualization -->
-            <div class="timeline-wrapper mb-5">
-                <h4 class="mb-3">Timeline Overview</h4>
+            <div class="timeline-wrapper">
                 @php
                     $today = now();
                     $allDates = $timeframes->flatMap(function($tf) {
@@ -224,22 +210,19 @@
                 </div>
             </div>
 
-            <!-- Management Table -->
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">All Timeframes</h4>
-                    <div class="table-responsive">
+            <!-- Details Table -->
+            <div class="mt-5">
+                <h4>Timeframe Details</h4>
+                <div class="card">
+                    <div class="card-body">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Event Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
-                                    <th>Semester</th>
                                     <th>Duration</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -251,11 +234,9 @@
                                         $isUpcoming = now()->lt($start);
                                     @endphp
                                     <tr>
-                                        <td>{{ $timeframe->id }}</td>
                                         <td><strong>{{ $timeframe->Event_Type }}</strong></td>
                                         <td>{{ $start->format('M d, Y') }}</td>
                                         <td>{{ $end->format('M d, Y') }}</td>
-                                        <td>{{ $timeframe->Semester }}</td>
                                         <td>{{ $start->diffInDays($end) + 1 }} days</td>
                                         <td>
                                             @if($isOngoing)
@@ -272,18 +253,6 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td>
-                                            <a href="{{ route('timeframes.edit', $timeframe->id) }}" class="btn btn-warning btn-sm">
-                                                <i class="mdi mdi-pencil"></i> Edit
-                                            </a>
-                                            <form action="{{ route('timeframes.destroy', $timeframe->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this timeframe?')">
-                                                    <i class="mdi mdi-delete"></i> Delete
-                                                </button>
-                                            </form>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -293,7 +262,7 @@
             </div>
         @else
             <div class="alert alert-info">
-                <i class="mdi mdi-information"></i> No timeframes created yet. Click "Add Timeframe" to create one.
+                <i class="mdi mdi-information"></i> No ongoing timeframes at the moment.
             </div>
         @endif
     </div>

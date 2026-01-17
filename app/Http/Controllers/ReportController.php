@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+
 class ReportController extends Controller
 {
     /**

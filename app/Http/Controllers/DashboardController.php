@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Application;
 use App\Models\Quota;
 
+
 class DashboardController extends Controller
 {
     public function adminDashboard()

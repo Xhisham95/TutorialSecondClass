@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ProjectTopic;
 use App\Models\User; // Import the User model
 
+
 class TopicController extends Controller
 {
     public function index()
@@ -50,10 +51,22 @@ public function viewTopicStatus()
     // Get the currently logged-in user
     $studentId = auth()->user()->id;
 
-    // Get topics for the logged-in student
-    $topics = ProjectTopic::where('Student_ID', $studentId)->get();
+    // Get applications for the logged-in student with topic details
+    $applications = \DB::table('applications')
+        ->join('project_topics', 'applications.topic_id', '=', 'project_topics.id')
+        ->where('applications.student_id', $studentId)
+        ->select(
+            'applications.id as application_id',
+            'applications.status as application_status',
+            'applications.remarks',
+            'project_topics.Topic_Title',
+            'project_topics.Topic_Description',
+            'applications.created_at'
+        )
+        ->orderBy('applications.created_at', 'desc')
+        ->get();
 
-    return view('students.view-status', compact('topics'));
+    return view('students.view-status', compact('applications'));
 }
 
 public function searchTopics(Request $request)

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ProjectTopic;
 
+
 class ApplicationController extends Controller
 {
     public function index()
@@ -30,7 +31,7 @@ class ApplicationController extends Controller
 
 public function review(Request $request, $id)
 {
-    // Fetch the application, including the supervisor_id and student_id
+    // Fetch the application and the student
     $application = \DB::table('applications')
         ->join('project_topics', 'applications.topic_id', '=', 'project_topics.id')
         ->where('applications.id', $id)
@@ -40,41 +41,64 @@ public function review(Request $request, $id)
         return redirect()->back()->with('error', 'Application not found.');
     }
 
-    // Fetch the quota for the supervisor
-    $quota = \DB::table('quotas')->where('Supervisor_ID', $application->supervisor_id)->first();
-
-    if (!$quota) {
-        return redirect()->back()->with('error', 'Quota record not found for this supervisor.');
-    }
-
     if ($request->action === 'accept') {
-        // Check if current_quota has reached QuotaNumber
+        // Check quota logic
+        $quota = \DB::table('quotas')->where('Supervisor_ID', $application->supervisor_id)->first();
         if ($quota->current_quota >= $quota->QuotaNumber) {
             return redirect()->back()->with('error', 'Quota limit reached. Cannot accept more applications.');
         }
 
         // Update the application status
-        \DB::table('applications')->where('id', $id)->update([
-            'status' => 'Accepted',
-            'updated_at' => now(),
-        ]);
+        \DB::table('applications')->where('id', $id)->update(['status' => 'Accepted', 'updated_at' => now()]);
 
-        // Update the topic status to "Closed" and assign the student ID to the topic
+        // Update the topic and quota
         \DB::table('project_topics')->where('id', $application->topic_id)->update([
             'Status' => 'Closed',
             'Student_ID' => $application->student_id,
         ]);
-
-        // Increment supervisor current_quota
         \DB::table('quotas')->where('Supervisor_ID', $application->supervisor_id)->increment('current_quota');
+
+        // Create a notification for the student
+        \DB::table('notifications')->insert([
+            'user_id' => $application->student_id,
+            'message' => 'Your application for the topic has been accepted!',
+            'is_read' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create a notification for the supervisor
+        \DB::table('notifications')->insert([
+            'user_id' => $quota->Supervisor_ID, // Send to the supervisor
+            'message' => "Your quota has been updated. Current quota: {$quota->current_quota}, Maximum quota: {$quota->QuotaNumber}.",
+            'is_read' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
 
         return redirect()->back()->with('success', 'Application accepted successfully.');
     }
 
     if ($request->action === 'reject') {
         // Update the application status
-        \DB::table('applications')->where('id', $id)->update([
-            'status' => 'Rejected',
+        \DB::table('applications')->where('id', $id)->update(['status' => 'Rejected', 'updated_at' => now()]);
+
+        // Create a notification for the student
+        \DB::table('notifications')->insert([
+            'user_id' => $application->student_id,
+            'message' => 'Your application for the topic has been rejected.',
+            'is_read' => false,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create a notification for the supervisor
+        \DB::table('notifications')->insert([
+            'user_id' => $application->supervisor_id,
+            'message' => 'You have rejected an application for the topic.',
+            'is_read' => false,
+            'created_at' => now(),
             'updated_at' => now(),
         ]);
 
@@ -83,6 +107,8 @@ public function review(Request $request, $id)
 
     return redirect()->back()->with('error', 'Invalid action.');
 }
+
+
 
 
 

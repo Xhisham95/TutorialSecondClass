@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -49,14 +50,17 @@ class UserController extends Controller
                 'password_changed' => false, // New users must change their password
             ]);
 
-            // Sending email notification (commented out for now)
-            /*
+            // Sending email notification
+
             try {
                 Mail::to($user->Email)->send(new \App\Mail\UserCredentialsMail($user, $data['password']));
             } catch (\Exception $e) {
-                \Log::error('Failed to send email to: ' . $user->Email);
+                try {
+                    Mail::to($user->Email)->send(new \App\Mail\UserCredentialsMail($user, $data['password']));
+                } catch (\Exception $e) {
+                    Log::error('Failed to send email to: ' . $user->Email . ' Error: ' . $e->getMessage());
+                }
             }
-            */
         }
 
         return redirect()->back()->with('success', 'Users uploaded successfully.');

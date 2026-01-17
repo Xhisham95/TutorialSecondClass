@@ -7,6 +7,7 @@ use App\Models\Slot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class AppointmentController extends Controller
 {
     // Method to manage appointments based on role

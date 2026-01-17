@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
+
 class PasswordChangeController extends Controller
 {
     /**
@@ -16,6 +17,7 @@ class PasswordChangeController extends Controller
     {
         // Return the password change view (create this view as 'auth.change_password')
         return view('auth.change_password');
+        
     }
 
     /**
